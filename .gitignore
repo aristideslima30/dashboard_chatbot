@@ -22,7 +22,7 @@ dist/
 downloads/
 eggs/
 .eggs/
-lib/
+# lib/  <-- REMOVIDO PARA NÃO IGNORAR frontend/src/lib
 lib64/
 parts/
 sdist/
