@@ -129,7 +129,12 @@ export default function ChatPage() {
       clientId.current = Date.now()
     }
 
-    const ws = new WebSocket(`ws://localhost:8000/conversations/ws/${clientId.current}`)
+    const apiBaseUrl = process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000"
+    const wsProtocol = window.location.protocol === "https:" ? "wss:" : "ws:"
+    const wsHost = apiBaseUrl.replace(/^https?:\/\//, "")
+    const wsUrl = `${wsProtocol}//${wsHost}/conversations/ws/${clientId.current}`
+
+    const ws = new WebSocket(wsUrl)
 
     ws.onopen = () => {
       console.log("Connected to WebSocket")
