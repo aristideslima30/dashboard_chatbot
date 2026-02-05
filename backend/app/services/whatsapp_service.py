@@ -195,8 +195,9 @@ class EvolutionProvider(WhatsAppProvider):
         }
 
 def get_whatsapp_service() -> WhatsAppProvider:
-    # Dados fornecidos pelo usuário
-    INSTANCE_ID = "3EE310AFD25642C9A84486CEC38C003A"
-    TOKEN = "6EE6E8FF28B522C090269684"
-    CLIENT_TOKEN = "F9e0bef67d6d74f799bb10fc975d97b2bS" # Token de segurança da conta
+    # Priorizar variáveis de ambiente para VPS
+    INSTANCE_ID = os.getenv("ZAPI_INSTANCE_ID", "3EE310AFD25642C9A84486CEC38C003A")
+    TOKEN = os.getenv("ZAPI_TOKEN", "6EE6E8FF28B522C090269684")
+    CLIENT_TOKEN = os.getenv("ZAPI_CLIENT_TOKEN", "F9e0bef67d6d74f799bb10fc975d97b2bS")
+    
     return ZApiProvider(instance_id=INSTANCE_ID, token=TOKEN, client_token=CLIENT_TOKEN)
