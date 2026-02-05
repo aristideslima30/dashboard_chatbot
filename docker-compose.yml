@@ -34,12 +34,12 @@ services:
       context: ./frontend
       dockerfile: Dockerfile
       args:
-        - NEXT_PUBLIC_API_URL=http://dashboard.escaliertech.cloud:81/api
+        - NEXT_PUBLIC_API_URL=http://dashboard.escaliertech.cloud:8000
     restart: always
     ports:
       - "3001:3000"
     environment:
-      - NEXT_PUBLIC_API_URL=http://dashboard.escaliertech.cloud:81/api
+      - NEXT_PUBLIC_API_URL=http://dashboard.escaliertech.cloud:8000
     depends_on:
       - backend
     networks:
