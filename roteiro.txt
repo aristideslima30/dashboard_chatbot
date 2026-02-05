@@ -1,0 +1,120 @@
+Crie uma aplicação web full stack para a empresa “3A Frios”, com foco PRINCIPAL em métricas operacionais e gerenciais da loja, e como módulo secundário o acompanhamento de conversas de WhatsApp em tempo real.
+
+OBJETIVO DO SISTEMA
+
+- Centralizar informações da loja 3A Frios
+- Exibir métricas operacionais e financeiras em dashboards
+- Acompanhar vendas, pedidos, produtos e clientes
+- Integrar atendimento via WhatsApp com chatbot (Agno)
+- Relacionar conversas com pedidos e clientes
+- Servir como painel único de gestão da loja
+
+Backend:
+- Python 3.11
+- FastAPI (async)
+- SQLAlchemy 2.0
+- PostgreSQL
+- WebSocket nativo do FastAPI
+- JWT para autenticação
+
+Frontend:
+- Next.js 14 (App Router)
+- TypeScript
+- Tailwind CSS
+- shadcn/ui
+- Gerenciamento de estado global
+- Conexão WebSocket persistente (para o módulo de conversas)
+
+MÓDULOS DO SISTEMA
+
+1. MÓDULO GERENCIAL (FOCO PRINCIPAL)
+
+Dados da Loja:
+- Produtos (categoria, preço, custo, estoque)
+- Pedidos (status, valor, forma de pagamento)
+- Clientes
+- Vendas por período
+
+Métricas Essenciais:
+- Faturamento diário, semanal e mensal
+- Ticket médio
+- Quantidade de pedidos
+- Produtos mais vendidos
+- Vendas por categoria
+- Clientes recorrentes
+- Pedidos por canal (WhatsApp, balcão, outros)
+
+Dashboard:
+- Cards de KPIs
+- Gráficos temporais
+- Filtros por período
+- Dados vindos diretamente do banco
+
+2. MÓDULO DE CONVERSAS (REALTIME)
+
+- Lista de conversas de WhatsApp
+- Conversas em tempo real via WebSocket
+- Histórico completo por cliente
+- Associação de conversa com pedido
+- Identificação de mensagens da IA (Agno) e humanas
+
+3. MÓDULO DE IA (AGNO)
+
+- Chatbot para atendimento inicial
+- Coleta de pedidos
+- Respostas automáticas
+- Possibilidade de intervenção humana
+- Registro de decisões da IA
+
+BACKEND (FASTAPI)
+
+- API REST modular
+- Endpoints para:
+  - Pedidos
+  - Clientes
+  - Conversas
+  - Mensagens
+- Persistência consistente
+- Eventos realtime apenas para o módulo de chat
+- Código preparado para crescimento
+
+FRONTEND (NEXT.JS)
+
+Layout Administrativo:
+- Sidebar:
+  - Visão Geral
+  - Vendas
+  - Produtos
+  - Clientes
+  - Conversas
+  - Relatórios
+  - Configurações
+
+Páginas:
+1. Visão Geral
+- KPIs principais
+- Gráficos resumidos
+
+2. Vendas
+- Lista de pedidos
+- Filtros
+- Detalhes do pedido
+
+3. Produtos
+- Cadastro
+- Estoque
+- Performance
+
+4. Conversas
+- Chat em tempo real
+- Estilo WhatsApp Web
+
+BANCO DE DADOS
+
+- PostgreSQL
+- Modelo normalizado
+- Índices para métricas
+- Campos temporais
+- Estrutura preparada para uso direto no Metabase
+
+Um sistema profissional e lindo!
