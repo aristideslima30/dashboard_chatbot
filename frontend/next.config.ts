@@ -5,11 +5,6 @@ const nextConfig: NextConfig = {
   experimental: {
     reactCompiler: true,
   },
-  // Desabilitar o lightningcss que está causando erro no build da VPS
-  webpack: (config) => {
-    config.optimization.minimize = false;
-    return config;
-  },
 };
 
 export default nextConfig;

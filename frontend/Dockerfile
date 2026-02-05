@@ -7,8 +7,8 @@ RUN apt-get update && apt-get install -y python3 make g++ libc6 && rm -rf /var/l
 
 COPY package*.json ./
 
-# Forçar o download dos binários corretos para Linux
-RUN npm install --platform=linux --arch=x64
+# Remover o package-lock para evitar conflito de arquitetura e instalar limpo para Linux
+RUN rm -f package-lock.json && npm install
 
 COPY . .
 
@@ -16,7 +16,7 @@ COPY . .
 ARG NEXT_PUBLIC_API_URL
 ENV NEXT_PUBLIC_API_URL=$NEXT_PUBLIC_API_URL
 
-# Desabilitar o lightningcss se ele continuar falhando, mas primeiro tentamos com os binários certos
+# Tentar o build ignorando erros de otimização de CSS se possível
 RUN npm run build
 
 FROM node:20-slim AS runner
