@@ -129,7 +129,7 @@ export default function ChatPage() {
       clientId.current = Date.now()
     }
 
-    const apiBaseUrl = process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000"
+    const apiBaseUrl = process.env.NEXT_PUBLIC_API_URL || (typeof window !== 'undefined' ? `${window.location.protocol}//${window.location.hostname}:8000` : "http://localhost:8000")
     const wsProtocol = window.location.protocol === "https:" ? "wss:" : "ws:"
     const wsHost = apiBaseUrl.replace(/^https?:\/\//, "")
     const wsUrl = `${wsProtocol}//${wsHost}/conversations/ws/${clientId.current}`
@@ -137,7 +137,11 @@ export default function ChatPage() {
     const ws = new WebSocket(wsUrl)
 
     ws.onopen = () => {
-      console.log("Connected to WebSocket")
+      console.log("Connected to WebSocket:", wsUrl)
+    }
+
+    ws.onerror = (error) => {
+      console.error("WebSocket Error:", error)
     }
 
     ws.onmessage = (event) => {
@@ -152,13 +156,25 @@ export default function ChatPage() {
             timestamp: data.timestamp,
           }
 
-          setConversations((prev) =>
-            prev.map((conv) =>
+          setConversations((prev) => {
+            const conversationExists = prev.some((conv) => conv.id === incoming.conversation_id)
+            
+            if (!conversationExists) {
+              // Se a conversa não existe na lista, recarregar a lista completa
+              api.get<Conversation[]>("/conversations").then(res => setConversations(res.data))
+              return prev
+            }
+
+            return prev.map((conv) =>
               conv.id === incoming.conversation_id
-                ? { ...conv, messages: [...(conv.messages ?? []), incoming] }
+                ? { ...conv, messages: [...(conv.messages ?? []), incoming], updated_at: incoming.timestamp }
                 : conv
-            )
-          )
+            ).sort((a, b) => {
+              const dateA = new Date(a.updated_at || a.created_at).getTime()
+              const dateB = new Date(b.updated_at || b.created_at).getTime()
+              return dateB - dateA
+            })
+          })
 
           if (selectedConversationIdRef.current === incoming.conversation_id) {
             setMessages((prev) => [...prev, incoming])
@@ -243,7 +259,7 @@ export default function ChatPage() {
   }
 
   const activeConversation = conversations.find((c) => c.id === selectedConversationId) || null
-  const apiBaseUrl = process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000"
+  const apiBaseUrl = process.env.NEXT_PUBLIC_API_URL || (typeof window !== 'undefined' ? `${window.location.protocol}//${window.location.hostname}:8000` : "http://localhost:8000")
 
   const filteredConversations = conversations
     .filter((conversation) => {

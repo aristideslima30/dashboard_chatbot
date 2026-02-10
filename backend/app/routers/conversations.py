@@ -27,13 +27,23 @@ class ConnectionManager:
     async def connect(self, websocket: WebSocket):
         await websocket.accept()
         self.active_connections.append(websocket)
+        print(f"DEBUG: Nova conexão WebSocket. Total: {len(self.active_connections)}")
 
     def disconnect(self, websocket: WebSocket):
-        self.active_connections.remove(websocket)
+        if websocket in self.active_connections:
+            self.active_connections.remove(websocket)
+            print(f"DEBUG: Conexão WebSocket removida. Total: {len(self.active_connections)}")
 
     async def broadcast(self, message: str):
+        print(f"DEBUG: Iniciando Broadcast para {len(self.active_connections)} conexões")
         for connection in self.active_connections:
-            await connection.send_text(message)
+            try:
+                await connection.send_text(message)
+                print("DEBUG: Mensagem enviada com sucesso para uma conexão")
+            except Exception as e:
+                print(f"DEBUG: Erro ao enviar mensagem WebSocket: {e}")
+                # Não removemos aqui para evitar erro de iteração, o disconnect cuidará disso
+
 
 manager = ConnectionManager()
 
@@ -347,7 +357,11 @@ async def zapi_webhook(request: Request, db: AsyncSession = Depends(get_db)):
     # 2. Buscar ou criar conversa aberta
     conv_res = await db.execute(
         select(models.Conversation)
-        .where(models.Conversation.customer_id == customer.id, models.Conversation.status == "open")
+        .where(
+            models.Conversation.customer_id == customer.id,
+            models.Conversation.status == "open"
+        )
+        .order_by(models.Conversation.updated_at.desc())
     )
     conversation = conv_res.scalars().first()
     

@@ -1,5 +1,6 @@
 from typing import Optional, Dict, Any
 import httpx
+import os
 import logging
 from .whatsapp_base import WhatsAppProvider
 
